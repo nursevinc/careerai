@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="CareerAI.API/CareerAI.API.csproj" />
+  <Project Path="CareerAI.Application/CareerAI.Application.csproj" />
+  <Project Path="CareerAI.Domain/CareerAI.Domain.csproj" />
+  <Project Path="CareerAI.Infrastructure/CareerAI.Infrastructure.csproj" />
+  <Project Path="CareerAI.Tests/CareerAI.Tests.csproj" />
+</Solution>
