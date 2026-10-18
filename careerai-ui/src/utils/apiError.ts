@@ -19,6 +19,7 @@ export const ERROR_CODE_KEYS = {
   resume_no_skills: 'errors.codes.resume_no_skills',
   job_no_skills: 'errors.codes.job_no_skills',
     invalid_password: 'errors.codes.invalid_password',
+      registration_closed: 'errors.codes.registration_closed',
 } as const
 
 export type KnownErrorCode = keyof typeof ERROR_CODE_KEYS

@@ -8,15 +8,6 @@ using CareerAI.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-using CareerAI.Application.Interfaces;
-using CareerAI.Infrastructure.AI;
-using CareerAI.Infrastructure.Auth;
-using CareerAI.Infrastructure.Data;
-using CareerAI.Infrastructure.PDF;
-using CareerAI.Infrastructure.Services;
-using CareerAI.Infrastructure.Storage;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CareerAI.Infrastructure;
 
@@ -42,7 +33,11 @@ public static class DependencyInjection
 
         // Resumes
         services.AddSingleton(storageSettings);
-        services.AddSingleton<IFileStorage, LocalFileStorage>();
+        // Sağlayıcı yapılandırmadan seçilir. DatabaseFileStorage DbContext kullandığı için scoped.
+        if (string.Equals(storageSettings.Provider, "Database", StringComparison.OrdinalIgnoreCase))
+            services.AddScoped<IFileStorage, DatabaseFileStorage>();
+        else
+            services.AddSingleton<IFileStorage, LocalFileStorage>();
         services.AddSingleton<IPdfTextExtractor, PdfPigTextExtractor>();
         services.AddScoped<IResumeService, ResumeService>();
 

@@ -9,6 +9,8 @@ const tr = {
         showPassword: 'Şifreyi göster',
     hidePassword: 'Şifreyi gizle',
     skipToContent: 'İçeriğe geç',
+        slowRequest:
+      'Sunucu uyanıyor olabilir. Ücretsiz barındırma nedeniyle ilk istek bir dakikaya kadar sürebilir, lütfen bekleyin.',
   },
   nav: {
     dashboard: 'Gösterge Paneli',
@@ -101,6 +103,7 @@ const tr = {
       job_no_skills:
         'İlan metninde teknik beceri bulunamadı. İlanın gereksinimler bölümünü de eklediğinizden emin olun.',
               invalid_password: 'Şifre hatalı.',
+                    registration_closed: 'Yeni kayıtlar şu anda kapalı. Bu bir demo uygulamasıdır ve kullanıcı kapasitesi dolmuştur.',
     },
   },
   dashboard: {

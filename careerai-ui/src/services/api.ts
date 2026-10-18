@@ -3,7 +3,7 @@ import { tokenStorage } from '../utils/tokenStorage'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 15_000, // 15 sn. Uzun süren isteklerde (dosya yükleme, AI) istek bazında artırıyoruz
+    timeout: 60_000, // ücretsiz barındırmada ilk istek (sunucu + veritabanı uyanması) uzun sürebilir
 })
 
 // Oturum geçersiz olduğunda AuthProvider'ın logout'unu çağırmak için.

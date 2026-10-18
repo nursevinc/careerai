@@ -8,7 +8,7 @@ import type { TFunction } from 'i18next'
 import TextField from '../components/TextField'
 import { useAuth } from '../hooks/useAuth'
 import { parseApiError } from '../utils/apiError'
-
+import SlowRequestHint from '../components/SlowRequestHint'
 const createLoginSchema = (t: TFunction) =>
   z.object({
     email: z.string().min(1, t('validation.emailRequired')).email(t('validation.emailInvalid')),
@@ -76,6 +76,7 @@ export default function LoginPage() {
           {isSubmitting ? t('auth.login.submitting') : t('auth.login.submit')}
         </button>
       </form>
+              {isSubmitting && <SlowRequestHint />}
 
       <p className="mt-6 text-center text-sm text-slate-500">
         {t('auth.login.noAccount')}{' '}

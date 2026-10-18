@@ -14,7 +14,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
 using Serilog.Events;
-
+using CareerAI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using CareerAI.Infrastructure.Storage;
 // Bootstrap logger: uygulama ayağa kalkarken (yapılandırma okunurken) oluşan hataları da yakalar
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -84,6 +86,9 @@ try
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(connectionString, jwtSettings, storageSettings, openAiSettings);
 
+    builder.Services.AddSingleton(
+    builder.Configuration.GetSection(RegistrationSettings.SectionName).Get<RegistrationSettings>()
+    ?? new RegistrationSettings());
     // ---------- Authentication ----------
     builder.Services
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -193,6 +198,9 @@ try
 
     var app = builder.Build();
 
+    // Üretimde (Proxy:ClientIpHeader=True-Client-IP) hız sınırı gerçek istemci IP'sine göre çalışır
+    app.UseClientIpFromHeader(app.Configuration["Proxy:ClientIpHeader"]);
+
     // İstek logu hata yakalayıcının DIŞINDA: yönetilen hatalar (400, 404...) gerçek durum koduyla loglanır.
     app.UseSerilogRequestLogging(options =>
     {
@@ -223,6 +231,15 @@ try
     app.UseRateLimiter();    // kimlik belli olduktan sonra: kullanıcı başına sınır
     app.MapControllers();
 
+    // İsteğe bağlı: açılışta bekleyen migration'ları uygula (docker-compose ve tek örnekli deployment için)
+    if (app.Configuration.GetValue("Database:MigrateOnStartup", false))
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.MigrateAsync();
+        Log.Information("Database migrations applied");
+    }
+
     app.Run();
     return 0;
 }
@@ -235,3 +252,6 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+// WebApplicationFactory<Program> (entegrasyon testleri) için Program sınıfını görünür yapar
+public partial class Program;

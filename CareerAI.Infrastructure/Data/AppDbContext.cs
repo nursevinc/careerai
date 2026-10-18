@@ -16,6 +16,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<JobApplicationSkill> JobApplicationSkills => Set<JobApplicationSkill>();
     public DbSet<ResumeSkill> ResumeSkills => Set<ResumeSkill>();
     public DbSet<AIAnalysis> AIAnalyses => Set<AIAnalysis>();
+
+    public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         // Tüm DateTime alanları UTC olarak okunsun
@@ -82,6 +84,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
              .WithMany()
              .HasForeignKey(x => x.ResumeId)
              .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<StoredFile>(e =>
+        {
+            e.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            e.HasIndex(x => x.Name).IsUnique();
+            e.Property(x => x.Content).IsRequired(); // varbinary(max)
         });
     }
 }

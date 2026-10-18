@@ -2,6 +2,7 @@
 using CareerAI.Application.Exceptions;
 using CareerAI.Application.Interfaces;
 using CareerAI.Domain.Entities;
+using CareerAI.Infrastructure.Auth;
 using CareerAI.Infrastructure.Data;
 using FluentValidation;
 using Microsoft.Data.SqlClient;
@@ -14,6 +15,7 @@ public class AuthService(
     AppDbContext db,
     IPasswordHasher passwordHasher,
     ITokenService tokenService,
+    RegistrationSettings registrationSettings,
     IValidator<RegisterRequest> registerValidator,
     IValidator<LoginRequest> loginValidator,
     ILogger<AuthService> logger) : IAuthService
@@ -21,6 +23,10 @@ public class AuthService(
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken ct = default)
     {
         await registerValidator.ValidateAndThrowAsync(request, ct);
+
+        // Herkese açık demoda toplam kullanıcı sayısına tavan
+        if (registrationSettings.MaxUsers > 0 && await db.Users.CountAsync(ct) >= registrationSettings.MaxUsers)
+            throw new BusinessRuleException("registration_closed", "New registrations are currently closed.");
 
         var email = NormalizeEmail(request.Email);
 

@@ -5,7 +5,7 @@ import Logo from '../components/Logo'
 import ScoreRing from '../components/ScoreRing'
 import SkillList from '../components/SkillList'
 import type { SkillMatch } from '../types/analysis'
-
+import { useServerWarmup } from '../hooks/useServerWarmup'
 const primaryButton =
   'inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700'
 const secondaryButton =
@@ -49,6 +49,7 @@ const PRIVACY_POINTS = [
 
 export default function LandingPage() {
   const { t } = useTranslation()
+    useServerWarmup()
 
   return (
     <div className="min-h-screen bg-white text-slate-900">

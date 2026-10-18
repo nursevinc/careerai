@@ -8,7 +8,7 @@ import type { TFunction } from 'i18next'
 import TextField from '../components/TextField'
 import { useAuth } from '../hooks/useAuth'
 import { parseApiError } from '../utils/apiError'
-
+import SlowRequestHint from '../components/SlowRequestHint'
 // Kurallar backend'deki RegisterRequestValidator ile aynı (UX için; asıl doğrulama backend'de)
 const createRegisterSchema = (t: TFunction) =>
   z
@@ -102,7 +102,7 @@ export default function RegisterPage() {
           {isSubmitting ? t('auth.register.submitting') : t('auth.register.submit')}
         </button>
       </form>
-
+        {isSubmitting && <SlowRequestHint />}
       <p className="mt-6 text-center text-sm text-slate-500">
         {t('auth.register.haveAccount')}{' '}
         <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-700">
