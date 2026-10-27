@@ -1,0 +1,13 @@
+**/bin
+**/obj
+**/node_modules
+**/.vs
+**/uploads
+.git
+.github
+careerai-ui
+CareerAI.Tests
+docs
+*.md
+.env
+.env.*
